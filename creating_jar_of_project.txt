@@ -1,0 +1,36 @@
+Created first project linkedlist
+
+$mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-simple -DarchetypeVersion=1.3
+
+in pom.xml 
+
+add below plugin 
+
+<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-jar-plugin</artifactId>
+	<version>3.2.0</version>
+	<configuration>
+		<archive>
+			<index>false</index>
+			<manifest>
+				<addClasspath>true</addClasspath>							
+			</manifest>
+		</archive>
+		<excludes>
+			<!-- to exeeculde maven folder under META-INF folder-->
+			<exclude>**/META-INF/maven/**</exclude>
+		</excludes>
+	</configuration>
+</plugin>
+
+
+maven archive details.
+
+https://maven.apache.org/shared/maven-archiver/index.html
+
+
+Now create second project create(stack)
+
+In pom.xml add the depedency of first project.
+
