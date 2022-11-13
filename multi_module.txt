@@ -1,0 +1,94 @@
+1 . Create the parent project.
+$mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-simple -DarchetypeVersion=1.3
+
+2 . Create Child project 
+
+$mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-simple -DarchetypeVersion=1.3
+
+3. Inside Parent POM mentioned all the common depedency , properties , plugin.
+
+<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>11</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+</properties>
+
+etc....
+
+
+4 . Inside Parent POM declare packaging type to POM.
+
+<packaging>pom</packaging>
+
+5 . Inside Parent POM mentioned modules of child project.
+
+Note : Should use relative path.
+
+<modules>
+		<module>../dsutility</module>
+		<module>../linkedlist</module>
+		<module>../stack</module>
+</modules>
+
+6. Inside Child POM declare parent with it artifact ID and relative path.
+
+<parent>
+		<groupId>com.nishchay</groupId>
+		<artifactId>ds</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>../ds/</relativePath>
+</parent>
+ 
+ 
+
+
+Some Important issue in multi-module project.
+
+1 .Want to override the jar plugin in child.
+
+<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.2.0</version>
+					<executions>
+						<execution>
+							
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<archive>
+							<index>false</index>
+							<addMavenDescriptor>false</addMavenDescriptor>
+							<manifest>
+								<addClasspath>true</addClasspath>
+							</manifest>
+						</archive>
+						<excludes>
+							<exclude>**/META-INF/maven/**</exclude>
+						</excludes>
+					</configuration>
+</plugin>
+
+
+This will cause the error "You have to use a classifier to attach supplemental artifacts to the project instead of replacing them"
+In this case there are 2 jar plugin 1 . default and second one is declared above.
+
+It is due to there is default jar plugin so either we have to remove decalred jar plugin or to override the default jar plugin.
+
+Overriding the default jar plugin we have declared  id in execution tag.
+
+<execution>
+		<id>default-jar</id>
+			<goals>
+				<goal>jar</goal>
+			</goals>
+</execution>
+
+Link :: 
+
+ https://stackoverflow.com/questions/40964500/maven-jar-plugin-3-0-2-error-you-have-to-use-a-classifier-to-attach-supplementa 
